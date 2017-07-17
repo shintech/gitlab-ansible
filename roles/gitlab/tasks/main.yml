@@ -1,0 +1,16 @@
+- name: build gitlab container...
+  docker_container:
+    name: gitlab
+    image: gitlab/gitlab-ce:latest
+    restart: yes
+    ports: 
+      - 0.0.0.0:22:22
+    volumes:
+    - ./data/config:/etc/gitlab:Z
+    - ./data/logs:/var/log/gitlab:Z
+    - ./data/data:/var/opt/gitlab:Z
+    - ./certbot/data/etc/live/{{ domain }}:/certbot/live/{{ domain }}:ro
+# Required since live files are actually symlinks to archive
+    - ./certbot/data/etc/archive/{{ domain }}:/certbot/archive/{{ domain }}:ro
+    networks:
+      - name: "{{ network_name }}"    
